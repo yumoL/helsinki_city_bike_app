@@ -6,6 +6,7 @@ services:
     environment:
       #- MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=password
+    command: --max_allowed_packet=128M
     restart: unless-stopped
     ports: 
       - "3306:3306"
