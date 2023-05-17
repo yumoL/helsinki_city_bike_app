@@ -2,3 +2,4 @@ node_modules
 mysql_data
 app_data
 docs/notes.md
+src/utils/dumpData.js
