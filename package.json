@@ -6,9 +6,12 @@
     "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon --inspect=9229 bin/www",
     "prd": "cross-env NODE_ENV=production pm2 start bin/www",
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit --colors",
-    "lint": "eslint --ext .js ./src"
+    "lint": "eslint --ext .js ./src",
+    "init_db": "node src/db/sync.js",
+    "init_data": "node src/utils/dumpData.js"
   },
   "dependencies": {
+    "csv-parser": "^3.0.0",
     "debug": "^4.1.1",
     "ejs": "~2.3.3",
     "koa": "^2.7.0",
