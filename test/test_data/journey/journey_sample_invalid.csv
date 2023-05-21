@@ -1,0 +1,9 @@
+Departure,Return,Departure station id,Departure station name,Return station id,Return station name,Covered distance (m),Duration (sec.)
+2021-05-31T23:57:25,2021-06-01T00:05:46,501,Hanasaari,503,Keilalahti,2043,500
+2021-05-31T23:56:59,2021-06-01T00:07:14,503,Keilalahti,505,Westendinasema,1870,611
+2021-05-31T23:56:44,2021-06-01T00:03:26,505,Westendinasema,022,Rautatientori / länsi,100,399
+invalid-string,2021-06-01T00:05:46,501,Hanasaari,503,Keilalahti,2043,500
+2021-05-31T23:57:25,2021-02-01T00:05:46,501,Hanasaari,503,Keilalahti,2043,500
+2021-05-31T23:57:25,2021-06-01T00:05:46,1,Hanasaari,3,Keilalahti,2043,500
+2021-05-31T23:57:25,2021-06-01T00:05:46,501,Hanasaari,503,Keilalahti,3,500
+2021-05-31T23:57:25,2021-06-01T00:05:46,501,Hanasaari,503,Keilalahti,2043,5

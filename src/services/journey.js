@@ -16,7 +16,7 @@ function _validateJourney(stationIds) {
     const duration = Number(journeyItem['Duration (sec.)'])
 
     // Departure and arrivel time should be parseable DateTime
-    if (!departureTime || !returnTime) return false
+    if (isNaN(departureTime) || isNaN(returnTime)) return false
 
     // Arrival time should be after departure time
     if (returnTime < departureTime) return false
@@ -41,6 +41,7 @@ function _validateJourney(stationIds) {
  * @param {Array} journeyChunk
  */
 function _mapJourneyList(journeyChunk) {
+  console.log('journeyChunk', journeyChunk)
   return journeyChunk
     .map(journeyItem => {
       return {

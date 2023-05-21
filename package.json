@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit --colors",
     "lint": "eslint --ext .js ./src",
     "init_db": "node src/db/sync.js",
-    "init_data": "node src/utils/dumpData.js"
+    "init_test_db": "cross-env NODE_ENV=test node src/db/sync.js"
   },
   "dependencies": {
     "@koa/cors": "^4.0.0",
@@ -33,6 +33,7 @@
     "@babel/eslint-parser": "^7.21.8",
     "cross-env": "^7.0.3",
     "eslint": "^8.40.0",
+    "form-data": "^4.0.0",
     "jest": "^29.5.0",
     "nodemon": "^1.19.4",
     "pre-commit": "^1.2.2",
