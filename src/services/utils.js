@@ -5,10 +5,11 @@ const { CHUNK_SIZE } = require('../config/constant')
 /**
  * Dump data from a single csv file db
  * @param {string} fileName csv file path
+ * @param {function} validationFunc Check if a data row is valid
  * @param {function} listMappingFunc The function that maps raw data get from the csv file to structured data whose properties are according to its db model
  * @param {function} bulkCreateFunc The function that saves data to db in bulk
  */
-function dumpDataFromCsv(fileName, listMappingFunc, bulkCreateFunc) {
+function dumpDataFromCsv({ fileName, validationFunc, listMappingFunc, bulkCreateFunc }) {
 
   return new Promise((resolve, reject) => {
     let dataChunk = []
@@ -20,7 +21,10 @@ function dumpDataFromCsv(fileName, listMappingFunc, bulkCreateFunc) {
         }
       ))
       .on('data', (data) => {
-        dataChunk.push(data)
+        if (validationFunc(data)) {
+          dataChunk.push(data)
+        }
+
       })
       .on('end', async () => {
 
@@ -32,7 +36,7 @@ function dumpDataFromCsv(fileName, listMappingFunc, bulkCreateFunc) {
         resolve(promiseArr)
 
       })
-      .on('error', (err) =>reject(err))
+      .on('error', (err) => reject(err))
   })
 }
 

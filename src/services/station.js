@@ -2,32 +2,8 @@ const { Station } = require('../db/model/index')
 const { dumpDataFromCsv } = require('./utils')
 
 /**
- * Create a station
- * @param {Object} station attributes {sid, name, address, city, operator, capacity, x, y}
- * @returns 
+ * Fetch valid station IDs
  */
-// async function createStation({ sid, name, address, city, operator, capacity, x, y }) {
-//   const result = await Station.create({
-//     sid,
-//     name,
-//     address,
-//     city,
-//     operator,
-//     capacity,
-//     x,
-//     y
-//   })
-//   return result.dataValues
-// }
-
-/**
- * Create stations in bulk
- * @param {Array} stationList 
- */
-// async function createBulkStation(stationList) {
-//   await Station.bulkCreate(stationList)
-// }
-
 async function getStationIds() {
   let res = await Station.findAll({
     attributes: ['sid']
@@ -38,6 +14,22 @@ async function getStationIds() {
       sids.push(station.sid)
     })
   return new Set(sids)
+}
+
+/**
+ * Check if a station is valid, i.e., the coordinates are valid geographic coordinate in Finland
+ * @param {object} stationItem
+ */
+function _validateStation(stationItem) {
+  const original_x = stationItem['x']
+  const original_y = stationItem['y']
+  const x = Number(original_x)
+  const y = Number(original_y)
+  // Coordinates are not numbers
+  if (!x || !y) return false
+  // Check if the coordinates are lying inside Finland
+  return x >= 19 && x <= 32 && y >= 58 && y <= 71
+  
 }
 
 /**
@@ -72,7 +64,12 @@ function _bulkCreateStations(stationList) {
  * @param {string} fileName csv file path
  */
 function dumpStationFromCsv(fileName) {
-  return dumpDataFromCsv(fileName, _mapStationList, _bulkCreateStations)
+  return dumpDataFromCsv({
+    fileName,
+    validationFunc: _validateStation,
+    listMappingFunc: _mapStationList,
+    bulkCreateFunc: _bulkCreateStations
+  })
 }
 
 module.exports = {

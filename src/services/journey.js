@@ -3,34 +3,44 @@ const { getStationIds } = require('./station')
 const { dumpDataFromCsv } = require('./utils')
 
 /**
- * Create a journey
- * @param {Object} journey journey attributes {departureTime, returnTime, departureStation, returnStation, distance, duration}
- * @returns 
+ * Check if a journey is valid
+ * @param {Set} stationIds a list of valid station IDs 
  */
-// async function createJourney({ departureTime, returnTime, departureStation, returnStation, distance, duration }) {
-//   //!departureTime || !returnTime || !departureStation || !returnStation || !distance || !duration ||
-//   if (distance < 10 || duration < 10) return
-//   const result = await Journey.create({
-//     departureTime,
-//     returnTime,
-//     departureStation,
-//     returnStation,
-//     distance,
-//     duration
-//   })
-//   return result.dataValues
-// }
+function _validateJourney(stationIds) {
+  function validate(journeyItem) {
+    const departureTime = new Date(journeyItem['Departure'])
+    const returnTime = new Date(journeyItem['Return'])
+    const departureStationId = parseInt(journeyItem['Departure station id'])
+    const returnStationId = parseInt(journeyItem['Return station id'])
+    const distance = Number(journeyItem['Covered distance (m)'])
+    const duration = Number(journeyItem['Duration (sec.)'])
 
-// async function createBulkJourney(journeyList) {
-//   Journey.bulkCreate(journeyList)
-// }
+    // Departure and arrivel time should be parseable DateTime
+    if (!departureTime || !returnTime) return false
+
+    // Arrival time should be after departure time
+    if (returnTime < departureTime) return false
+
+    // Departure and arrival station id should be valid
+    if (!departureStationId
+      || !returnStationId
+      || !stationIds.has(departureStationId)
+      || !stationIds.has(returnStationId))
+      return false
+
+    // Distance and duration should be valid
+    return distance && duration && distance >= 10 && duration >= 10
+
+  }
+  return validate
+
+}
 
 /**
  * Map a journey chunk that contains raw journey data to a structured journey list where data properties are according to the Journey model
  * @param {Array} journeyChunk
  */
-async function _mapJourneyList(journeyChunk) {
-  const stationIds = await getStationIds()
+function _mapJourneyList(journeyChunk) {
   return journeyChunk
     .map(journeyItem => {
       return {
@@ -38,15 +48,10 @@ async function _mapJourneyList(journeyChunk) {
         returnTime: journeyItem['Return'],
         departureStationId: parseInt(journeyItem['Departure station id']),
         returnStationId: parseInt(journeyItem['Return station id']),
-        distance: parseInt(journeyItem['Covered distance (m)']),
-        duration: parseInt(journeyItem['Duration (sec.)'])
+        distance: Number(journeyItem['Covered distance (m)']),
+        duration: Number(journeyItem['Duration (sec.)'])
       }
     })
-    .filter(journey =>
-      stationIds.has(journey.departureStationId) &&
-      stationIds.has(journey.returnStationId) &&
-      journey.distance >= 10 &&
-      journey.duration >= 10)
 }
 
 /**
@@ -61,8 +66,14 @@ function _bulkCreateJourneys(journeyList) {
  * Dump station data from a single csv file to the database
  * @param {string} fileName csv file path
  */
-function dumpJourneyFromCsv(fileName) {
-  return dumpDataFromCsv(fileName, _mapJourneyList, _bulkCreateJourneys)
+async function dumpJourneyFromCsv(fileName) {
+  const stationIds = await getStationIds()
+  return dumpDataFromCsv({
+    fileName,
+    validationFunc: _validateJourney(stationIds),
+    listMappingFunc: _mapJourneyList,
+    bulkCreateFunc: _bulkCreateJourneys
+  })
 }
 
 /**

@@ -19,7 +19,7 @@ const Journey = seq.define('journey', {
     allowNull: false
   },
   distance: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: false,
     validate: {
       min: 10
@@ -27,7 +27,7 @@ const Journey = seq.define('journey', {
     comment: 'unit: m'
   },
   duration: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: false,
     validate: {
       min: 10
