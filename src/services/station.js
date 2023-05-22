@@ -1,5 +1,6 @@
 const { Station } = require('../db/model/index')
 const { dumpDataFromCsv } = require('./utils')
+const { PAGE_SIZE } = require('../config/constant')
 
 /**
  * Fetch valid station IDs
@@ -29,7 +30,7 @@ function _validateStation(stationItem) {
   if (!x || !y) return false
   // Check if the coordinates are lying inside Finland
   return x >= 19 && x <= 32 && y >= 58 && y <= 71
-  
+
 }
 
 /**
@@ -72,7 +73,34 @@ function dumpStationFromCsv(fileName) {
   })
 }
 
+/**
+ * Fetch station list
+ * @param {number} pageIndex 
+ * @param {number} pageSize 
+ */
+async function getStationList({ pageIndex, pageSize = PAGE_SIZE }) {
+  const result = await Station.findAndCountAll({
+    attributes: ['sid', 'name', 'address', 'city'],
+    limit: pageSize,
+    offset: pageSize * pageIndex,
+    order: [
+      ['sid', 'asc']
+    ],
+  })
+  let stationList = result.rows.map(row => row.dataValues)
+    .map(row => {
+      row.city = row.city.trim().length > 0 ? row.city : 'Helsinki'
+      return row
+    })
+  console.log(stationList)
+  return {
+    count: result.count,
+    stationList
+  }
+}
+
 module.exports = {
   dumpStationFromCsv,
-  getStationIds
+  getStationIds,
+  getStationList
 }

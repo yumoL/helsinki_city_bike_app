@@ -1,7 +1,9 @@
-const { dumpStationFromCsv } = require('../services/station')
+const { dumpStationFromCsv, getStationList } = require('../services/station')
 const { ErrorModel, SuccessModel } = require('../resModel/ResModel')
 const fse = require('fs-extra')
-const { uploadFileFailInfo } = require('../resModel/ErrorInfo')
+const { uploadFileFailInfo,
+  listStationsFailInfo
+} = require('../resModel/ErrorInfo')
 
 /**
  * 
@@ -18,6 +20,17 @@ async function dumpStationData(filePath) {
   return new SuccessModel()
 }
 
+async function listStations({ pageIndex, pageSize }) {
+  try {
+    const data = await getStationList({ pageIndex, pageSize })
+    return new SuccessModel(data)
+  } catch (e) {
+    console.error(e)
+    return new ErrorModel(listStationsFailInfo)
+  }
+}
+
 module.exports = {
-  dumpStationData
+  dumpStationData,
+  listStations
 }
