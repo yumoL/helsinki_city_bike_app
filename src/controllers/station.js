@@ -20,9 +20,15 @@ async function dumpStationData(filePath) {
   return new SuccessModel()
 }
 
-async function listStations({ pageIndex, pageSize }) {
+/**
+ * Get a station list
+ * @param {string} keyword keyword used in like search by name
+ * @param {number} pageIndex 
+ * @param {number} pageSize 
+ */
+async function listStations({ keyword, pageIndex, pageSize }) {
   try {
-    const data = await getStationList({ pageIndex, pageSize })
+    const data = await getStationList({ keyword, pageIndex, pageSize })
     return new SuccessModel(data)
   } catch (e) {
     console.error(e)

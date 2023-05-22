@@ -12,8 +12,9 @@ router.post('/upload', koaForm(), async (ctx, next) => {
 
 router.get('/all/:pageIndex', async (ctx, next) => {
   let { pageIndex } = ctx.params
+  const { keyword } = ctx.query
   pageIndex = parseInt(pageIndex)
-  ctx.body = await listStations({ pageIndex })
+  ctx.body = await listStations({ keyword, pageIndex })
 })
 
 

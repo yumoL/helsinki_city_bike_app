@@ -1,6 +1,8 @@
 const { Station } = require('../db/model/index')
 const { dumpDataFromCsv } = require('./utils')
 const { PAGE_SIZE } = require('../config/constant')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 /**
  * Fetch valid station IDs
@@ -75,11 +77,21 @@ function dumpStationFromCsv(fileName) {
 
 /**
  * Fetch station list
+ * @param {string} keyword keyword used in like search by name
  * @param {number} pageIndex 
  * @param {number} pageSize 
  */
-async function getStationList({ pageIndex, pageSize = PAGE_SIZE }) {
+async function getStationList({ keyword, pageIndex, pageSize = PAGE_SIZE }) {
+  let whereOpt = {}
+  if (keyword) {
+    whereOpt = {
+      name: {
+        [Op.like]: `%${keyword}%`
+      }
+    }
+  }
   const result = await Station.findAndCountAll({
+    where: whereOpt,
     attributes: ['sid', 'name', 'address', 'city'],
     limit: pageSize,
     offset: pageSize * pageIndex,
