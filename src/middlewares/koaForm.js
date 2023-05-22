@@ -8,7 +8,7 @@ const UPLOADED_DIR = path.join(__dirname, '..', 'uploadedFiles')
 // Create the uploaded dir if not existing
 fse.pathExists(UPLOADED_DIR).then(exist => {
   if (!exist) {
-      fse.ensureDir(UPLOADED_DIR)
+    fse.ensureDir(UPLOADED_DIR)
   }
 })
 
