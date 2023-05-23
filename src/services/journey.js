@@ -41,7 +41,6 @@ function _validateJourney(stationIds) {
  * @param {Array} journeyChunk
  */
 function _mapJourneyList(journeyChunk) {
-  console.log('journeyChunk', journeyChunk)
   return journeyChunk
     .map(journeyItem => {
       return {
