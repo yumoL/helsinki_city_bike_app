@@ -1,5 +1,8 @@
 const router = require('koa-router')()
-const { dumpStationData, listStations } = require('../controllers/station')
+const { dumpStationData, 
+  listStations,
+  getStation
+} = require('../controllers/station')
 const koaForm = require('../middlewares/koaForm')
 
 
@@ -15,6 +18,17 @@ router.get('/all/:pageIndex', async (ctx, next) => {
   const { keyword } = ctx.query
   pageIndex = parseInt(pageIndex)
   ctx.body = await listStations({ keyword, pageIndex })
+})
+
+router.get('/:sid', async (ctx, next) => {
+  let { sid } = ctx.params
+  sid = parseInt(sid)
+  let { month } = ctx.query
+  let monthIndex = -1
+  if (month) {
+    monthIndex = parseInt(month) - 1
+  }
+  ctx.body = await getStation(sid, monthIndex)
 })
 
 

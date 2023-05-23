@@ -1,4 +1,4 @@
-const { Station } = require('../db/model/index')
+const { Station, Journey } = require('../db/model/index')
 const { dumpDataFromCsv } = require('./utils')
 const { PAGE_SIZE } = require('../config/constant')
 const Sequelize = require('sequelize')
@@ -104,15 +104,73 @@ async function getStationList({ keyword, pageIndex, pageSize = PAGE_SIZE }) {
       row.city = row.city.trim().length > 0 ? row.city : 'Helsinki'
       return row
     })
-  console.log(stationList)
   return {
     count: result.count,
     stationList
   }
 }
 
+/**
+ * Get a single station by sid
+ * @param {integer} sid 
+ * @param {integer} monthIndex 0 for Jan and 11 for Dec
+ * @returns 
+ */
+async function getStationBySid(sid, monthIndex = -1) {
+  let journeyOpt = {}
+  if (monthIndex >= 0 && monthIndex <= 11) {
+    journeyOpt = {
+      departureTime: {
+        [Op.and]: [
+          { [Op.gte]: new Date(Date.UTC(2021, monthIndex, 1)) },
+          { [Op.lt]: new Date(Date.UTC(2021, monthIndex + 1, 1)) }
+        ]
+      }
+    }
+  }
+  const result = await Station.findOne({
+    where: { sid },
+    attributes: ['sid', 'name', 'address', 'capacity', 'x', 'y'],
+    include: [
+      {
+        model: Journey,
+        where: journeyOpt,
+        attributes: ['id', 'departureTime', 'returnStationId', 'distance', 'duration'],
+        as: 'departures',
+        //to spped up the query, set separate to true to run a separate query to fetch the associated instances, 
+        //note: only supported for hasMany associations
+        separate: true,
+        include: [
+          {
+            model: Station,
+            attributes: ['name'],
+            as: 'returnStation',
+          }
+        ] 
+      },
+      {
+        model: Journey,
+        where: journeyOpt,
+        attributes: ['id', 'departureStationId', 'distance', 'duration'],
+        as: 'returns',
+        separate: true,
+        include: [
+          {
+            model: Station,
+            attributes: ['name'],
+            as: 'departureStation',
+          }
+        ] 
+      }
+    ]
+  })
+  //console.log(result.dataValues)
+  return result.dataValues
+}
+
 module.exports = {
   dumpStationFromCsv,
   getStationIds,
-  getStationList
+  getStationList,
+  getStationBySid
 }
