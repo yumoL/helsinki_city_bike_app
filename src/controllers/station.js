@@ -6,7 +6,8 @@ const { dumpStationFromCsv,
 const { ErrorModel, SuccessModel } = require('../resModel/ResModel')
 const fse = require('fs-extra')
 const { uploadFileFailInfo,
-  listStationsFailInfo
+  listStationsFailInfo,
+  getSingleStationFailInfo
 } = require('../resModel/ErrorInfo')
 
 /**
@@ -76,7 +77,13 @@ function _sortObjByVal(obj) {
  * @param {integer} monthIndex
  */
 async function getStation(sid, monthIndex = -1) {
-  let station = await getStationBySid(sid, monthIndex)
+  let station
+  try {
+    station = await getStationBySid(sid, monthIndex)
+  } catch (e) {
+    return new ErrorModel(getSingleStationFailInfo)
+  }
+  
   //Total number of journeys starting from the station
   const departureCount = station.departures.length
 

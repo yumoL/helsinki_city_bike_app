@@ -10,5 +10,9 @@ module.exports = {
   listStationsFailInfo: {
     errno: 10002,
     message: 'Failed to fetch station list'
+  },
+  getSingleStationFailInfo: {
+    errno: 10003, 
+    message: 'Failed to fetch the station'
   }
 }
