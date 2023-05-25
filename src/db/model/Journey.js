@@ -33,7 +33,20 @@ const Journey = seq.define('journey', {
       min: 10
     },
     comment: 'unit: second'
+  },
+},
+  {
+    indexes: [
+      {
+        unique: false,
+        fields: ['departureStationId']
+      },
+      {
+        unique: false,
+        fields: ['returnStationId']
+      },
+    ]
   }
-})
+)
 
 module.exports = Journey

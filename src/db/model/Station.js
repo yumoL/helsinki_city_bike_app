@@ -34,7 +34,16 @@ const Station = seq.define('station', {
   y: {
     type: DataTypes.FLOAT,
     allowNull: false
+  },
+},
+  {
+    indexes: [
+      {
+        unique: false,
+        fields: ['name']
+      }
+    ]
   }
-})
+)
 
 module.exports = Station
