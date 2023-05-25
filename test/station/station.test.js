@@ -30,7 +30,7 @@ describe('Listing stations', () => {
       .query({ keyword: '' })
     expect(res.body.errno).toBe(0)
     expect(res.body.data.count).toBe(7)
-    expect(res.body.data.stationList.length).toBe(2)
+    expect(res.body.data.stationList.length).toBe(3)
   })
 
   test('Can list stations based on station name keyword', async () => {
