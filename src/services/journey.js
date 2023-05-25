@@ -1,6 +1,9 @@
 const { Journey, Station } = require('../db/model/index')
 const { getStationIds } = require('./station')
 const { dumpDataFromCsv } = require('./utils')
+const { PAGE_SIZE } = require('../config/constant')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 /**
  * Check if a journey is valid
@@ -77,45 +80,90 @@ async function dumpJourneyFromCsv(fileName) {
 }
 
 /**
+ * Parse sequelize order criteria
+ * @param {Object} orderObj  
+ */
+function _parseOrderOpt(orderObj) {
+  let orderArr = []
+  let sortingOrder = orderObj.order === 0 ? 'DESC' : 'ASC'
+  if (orderObj.name === 'departureStation' || orderObj.name === 'returnStation') {
+    orderArr.push([Sequelize.col(`${orderObj.name}.name`), sortingOrder])
+  } else {
+    orderArr.push([orderObj.name, sortingOrder])
+  }
+  return orderArr
+}
+
+/**
+ * Parse sequelize where criteria
+ * @param {Object} whereObj  
+ */
+function _parseWhereOpt(whereObj) {
+  let whereOpt = {}
+  Object.keys(whereObj).forEach(key => {
+    if (key === 'duration' || key === 'distance') {
+      whereOpt[key] = {
+        [Op.and]: [
+          whereObj[key].min ? { [Op.gte]: whereObj[key].min } : { [Op.gte]: 0 },
+          whereObj[key].max ? { [Op.lte]: whereObj[key].max } : { [Op.lte]: Number.MAX_VALUE }
+        ]
+      }
+    } else if (key === 'departureStationId' || key === 'returnStationId') {
+      whereOpt[key] = whereObj[key].val
+    }
+  })
+  return whereOpt
+}
+
+/**
   * List journey
-  * @param {Integer} pageIndex 
-  * @param {Integer} pageSize
+  * @param {integer} pageIndex 
+  * @param {integer} pageSize
+  * @param {Object} order order criteria
+  * @param {Object} where where criteria
 */
-// async function listJourney({ pageIndex = 0, pageSize = 6 }) {
-//   const result = await Journey.findAndCountAll({
-//     limit: pageSize,
-//     offset: pageSize * pageIndex,
-//     order: [
-//       ['id', 'ASC']
-//     ],
-//     include: [
-//       {
-//         model: Station,
-//         attributes: ['name'],
-//         as: 'departureStation'
-//       },
-//       {
-//         model: Station,
-//         attributes: ['name'],
-//         as: 'returnStation'
-//       }
-//     ]
-//   })
-//   let journeyList = result.rows.map(j => j.dataValues)
-//   journeyList = journeyList.map(j => {
-//     j.departureStation = j.departureStation.dataValues.name
-//     j.returnStation = j.returnStation.dataValues.name
-//     return j
-//   })
-//   //console.log(journeyList)
-//   return {
-//     count: result.count,
-//     journeyList
-//   }
-// }
+async function getJourneyList({ pageIndex = 0, pageSize = PAGE_SIZE, order = {}, where = {} }) {
+  const whereOpt = _parseWhereOpt(where)
+  const count = await Journey.count({
+    where: whereOpt
+  })
+  const result = await Journey.findAll({
+    limit: pageSize,
+    offset: pageSize * pageIndex,
+    order: _parseOrderOpt(order),
+    where: whereOpt,
+    attributes: ['id', 'departureStationId', 'returnStationId', 'duration', 'distance'],
+    include: [
+      {
+        model: Station,
+        attributes: ['name'],
+        as: 'departureStation',
+        required: true //inner join
+      },
+      {
+        model: Station,
+        attributes: ['name'],
+        as: 'returnStation',
+        required: true
+      }
+    ]
+  })
+  let journeyList = result.map(j => j.dataValues)
+  journeyList = journeyList.map(j => {
+    j.departureStation = j.departureStation.dataValues.name
+    j.returnStation = j.returnStation.dataValues.name
+    return j
+  })
+
+  return {
+    count,
+    journeyList
+  }
+}
 
 
 module.exports = {
-  dumpJourneyFromCsv
+  dumpJourneyFromCsv,
+  getJourneyList
 }
 

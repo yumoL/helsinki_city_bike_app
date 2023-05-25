@@ -14,5 +14,9 @@ module.exports = {
   getSingleStationFailInfo: {
     errno: 10003, 
     message: 'Failed to fetch the station'
+  },
+  listJourneysFailInfo: {
+    errno: 10004,
+    message: 'Failed to list journeys'
   }
 }
