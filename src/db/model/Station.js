@@ -36,14 +36,14 @@ const Station = seq.define('station', {
     allowNull: false
   },
 },
-  {
-    indexes: [
-      {
-        unique: false,
-        fields: ['name']
-      }
-    ]
-  }
+{
+  indexes: [
+    {
+      unique: false,
+      fields: ['name']
+    }
+  ]
+}
 )
 
 module.exports = Station
