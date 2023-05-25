@@ -84,6 +84,7 @@ async function dumpJourneyFromCsv(fileName) {
  * @param {Object} orderObj  
  */
 function _parseOrderOpt(orderObj) {
+  if (!orderObj) return [['id', 'ASC']]
   let orderArr = []
   let sortingOrder = orderObj.order === 0 ? 'DESC' : 'ASC'
   if (orderObj.name === 'departureStation' || orderObj.name === 'returnStation') {
@@ -99,6 +100,7 @@ function _parseOrderOpt(orderObj) {
  * @param {Object} whereObj  
  */
 function _parseWhereOpt(whereObj) {
+  if (!whereObj) return {}
   let whereOpt = {}
   Object.keys(whereObj).forEach(key => {
     if (key === 'duration' || key === 'distance') {
@@ -122,7 +124,7 @@ function _parseWhereOpt(whereObj) {
   * @param {Object} order order criteria
   * @param {Object} where where criteria
 */
-async function getJourneyList({ pageIndex = 0, pageSize = PAGE_SIZE, order = {}, where = {} }) {
+async function getJourneyList({ pageIndex = 0, pageSize = PAGE_SIZE, order, where }) {
   const whereOpt = _parseWhereOpt(where)
   const count = await Journey.count({
     where: whereOpt

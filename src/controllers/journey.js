@@ -24,9 +24,9 @@ async function dumpJourneyData(filePath) {
  * @param {Object} order order criteria 
  * @param {Object} where where criteria
  */
-async function listJourneys({ pageIndex = 0, pageSize, order = {}, where = {} }) {
+async function listJourneys({ pageIndex = 0, pageSize, order, where }) {
   try {
-    let res = await getJourneyList({ pageIndex, order, where })
+    let res = await getJourneyList({ pageIndex, pageSize, order, where })
     let journeyList = res.journeyList.map(j => {
       j.distance = (j.distance / 1000).toFixed(2)
       j.duration = (j.duration / 60).toFixed(2)
@@ -35,6 +35,7 @@ async function listJourneys({ pageIndex = 0, pageSize, order = {}, where = {} })
     res.journeyList = journeyList
     return new SuccessModel(res)
   } catch (e) {
+    console.error(e)
     return new ErrorModel(listJourneysFailInfo)
   }
 }
