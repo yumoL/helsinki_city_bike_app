@@ -10,9 +10,9 @@ router.post('/upload', koaForm(), async (ctx, next) => {
   ctx.body = await dumpJourneyData(fileData.filepath)
 })
 
-router.get('/all/:pageIndex', async (ctx, next) => {
+router.post('/all/:pageIndex', async (ctx, next) => {
   let { pageIndex } = ctx.params
-  let {order, where} = ctx.request.body
+  let { order, where } = ctx.request.body
   pageIndex = parseInt(pageIndex)
   ctx.body = await listJourneys({ pageIndex, order, where })
 })

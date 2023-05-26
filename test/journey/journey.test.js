@@ -78,7 +78,7 @@ describe('List journeys', () => {
 
   test('Can list journeys when no order or filter criterion is given', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
     expect(res.body.errno).toBe(0)
     const resData = res.body.data
     expect(resData.count).toBe(5)
@@ -94,7 +94,7 @@ describe('List journeys', () => {
 
   test('Can list journeys sorted by departure station name in ASC order', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
       .send({
         'order': {
           name: 'departureStation',
@@ -114,7 +114,7 @@ describe('List journeys', () => {
 
   test('Can list journeys sorted by arrival station name in DESC order', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
       .send({
         'order': {
           name: 'returnStation',
@@ -134,7 +134,7 @@ describe('List journeys', () => {
 
   test('Can list journeys sorted by duration in ASC order', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
       .send({
         'order': {
           name: 'duration',
@@ -154,7 +154,7 @@ describe('List journeys', () => {
 
   test('Can list journeys sorted by distance in DESC order (second page)', async () => {
     const res = await server
-      .get('/api/journey/all/1')
+      .post('/api/journey/all/1')
       .send({
         'order': {
           name: 'distance',
@@ -174,7 +174,7 @@ describe('List journeys', () => {
 
   test('Can filter journeys when where criteria are given', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
       .send({
         where: {
           "duration": {
@@ -199,7 +199,7 @@ describe('List journeys', () => {
 
   test('Can order and filter journeys when both order and where criteria are given', async () => {
     const res = await server
-      .get('/api/journey/all/0')
+      .post('/api/journey/all/0')
       .send({
         order: {
           "name": "distance",
