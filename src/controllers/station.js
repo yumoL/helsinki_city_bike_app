@@ -31,9 +31,9 @@ async function dumpStationData(filePath) {
  * @param {number} pageIndex 
  * @param {number} pageSize 
  */
-async function listStations({ keyword, pageIndex, pageSize }) {
+async function listStations({ keyword, pageIndex }) {
   try {
-    const data = await getStationList({ keyword, pageIndex, pageSize })
+    const data = await getStationList({ keyword, pageIndex })
     return new SuccessModel(data)
   } catch (e) {
     console.error(e)
