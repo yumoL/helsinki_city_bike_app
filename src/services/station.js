@@ -106,6 +106,7 @@ async function getStationList({ keyword, pageIndex, pageSize = PAGE_SIZE }) {
     })
   return {
     count: result.count,
+    pageSize,
     stationList
   }
 }

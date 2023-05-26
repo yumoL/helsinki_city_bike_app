@@ -159,6 +159,7 @@ async function getJourneyList({ pageIndex = 0, pageSize = PAGE_SIZE, order, wher
 
   return {
     count,
+    pageSize,
     journeyList
   }
 }
