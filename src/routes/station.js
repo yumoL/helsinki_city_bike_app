@@ -16,11 +16,15 @@ router.post('/upload', koaForm(), async (ctx, next) => {
 router.get('/all/:pageIndex', async (ctx, next) => {
   let { pageIndex } = ctx.params
   const { keyword } = ctx.query
-  pageIndex = parseInt(pageIndex)
+  if (pageIndex !== 'all') {
+    pageIndex = parseInt(pageIndex)
+  } else {
+    pageIndex = null
+  }
   ctx.body = await listStations({ keyword, pageIndex })
 })
 
-router.get('/:sid', async (ctx, next) => {
+router.get('/single/:sid', async (ctx, next) => {
   let { sid } = ctx.params
   sid = parseInt(sid)
   let { month } = ctx.query

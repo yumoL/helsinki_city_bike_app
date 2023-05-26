@@ -93,10 +93,10 @@ async function getStationList({ keyword, pageIndex, pageSize = PAGE_SIZE }) {
   const result = await Station.findAndCountAll({
     where: whereOpt,
     attributes: ['sid', 'name', 'address', 'city'],
-    limit: pageSize,
-    offset: pageSize * pageIndex,
+    limit: pageIndex != null ? pageSize : null,
+    offset: pageIndex != null ? pageSize * pageIndex : 0,
     order: [
-      ['sid', 'asc']
+      ['name', 'asc']
     ],
   })
   let stationList = result.rows.map(row => row.dataValues)
