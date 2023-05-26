@@ -24,6 +24,14 @@ describe('Listing stations', () => {
     await uploadStations(filePath)
   })
 
+  test('Can list all stations without specifying page number', async () => {
+    const res = await server
+      .get('/api/station/all/all')
+    expect(res.body.errno).toBe(0)
+    expect(res.body.data.count).toBe(7)
+    expect(res.body.data.stationList.length).toBe(7)
+  })
+
   test('Can list stations given a page number', async () => {
     const res = await server
       .get('/api/station/all/0')
@@ -67,7 +75,7 @@ describe('Fetch a single station', () => {
 
   test('Can fetch a single station with its departure and return journeys across all month', async () => {
     const res = await server
-      .get('/api/station/501')
+      .get('/api/station/single/501')
     expect(res.body.errno).toBe(0)
     const resData = res.body.data
     const correctData = {
@@ -101,7 +109,7 @@ describe('Fetch a single station', () => {
 
   test('Can fetch a single station with its departure and return journeys when month is specified', async () => {
     const res = await server
-      .get('/api/station/501')
+      .get('/api/station/single/501')
       .query({ month: 5 })
     expect(res.body.errno).toBe(0)
     const resData = res.body.data
