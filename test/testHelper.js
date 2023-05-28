@@ -31,11 +31,22 @@ async function uploadJourneys(filePath) {
   return res
 }
 
+function testAgainstCorrectJourneyList(testList, correctList) {
+  const journeyList = testList.map(j => {
+      delete j['id']
+      return j
+    })
+    for (let i = 0; i < journeyList.length; i++) {
+      expect(journeyList[i]).toEqual(correctList[i])
+    }
+}
+
 module.exports = {
   deleteAllStations,
   countStation,
   deleteAllJourneys,
   countJourney,
   uploadStations,
-  uploadJourneys
+  uploadJourneys,
+  testAgainstCorrectJourneyList
 }

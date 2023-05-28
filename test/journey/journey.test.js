@@ -3,7 +3,8 @@ const { deleteAllStations,
   countJourney,
   deleteAllJourneys,
   uploadStations,
-  uploadJourneys } = require('../testHelper')
+  uploadJourneys,
+  testAgainstCorrectJourneyList } = require('../testHelper')
 const path = require('path')
 
 beforeEach(async () => {
@@ -83,13 +84,7 @@ describe('List journeys', () => {
     const resData = res.body.data
     expect(resData.count).toBe(5)
     const correctList = defaultList.slice(0, 3)
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can list journeys sorted by departure station name in ASC order', async () => {
@@ -103,13 +98,7 @@ describe('List journeys', () => {
       })
     const resData = res.body.data
     const correctList = defaultList.sort((a, b) => a.departureStation.localeCompare(b.departureStation))
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can list journeys sorted by arrival station name in DESC order', async () => {
@@ -123,13 +112,7 @@ describe('List journeys', () => {
       })
     const resData = res.body.data
     const correctList = defaultList.sort((a, b) => b.returnStation.localeCompare(a.returnStation))
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can list journeys sorted by duration in ASC order', async () => {
@@ -143,13 +126,7 @@ describe('List journeys', () => {
       })
     const resData = res.body.data
     const correctList = defaultList.sort((a, b) => a.duration - b.duration)
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can list journeys sorted by distance in DESC order (second page)', async () => {
@@ -163,13 +140,7 @@ describe('List journeys', () => {
       })
     const resData = res.body.data
     const correctList = defaultList.sort((a, b) => b.distance - a.distance).slice(3, 5)
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can filter journeys when where criteria are given', async () => {
@@ -188,13 +159,7 @@ describe('List journeys', () => {
       })
     const resData = res.body.data
     const correctList = defaultList.filter(j => j.duration * 60 >= 300 && j.duration * 60 <= 600 && j.distance * 1000 >= 2000)
-    const journeyList = resData.journeyList.map(j => {
-      delete j['id']
-      return j
-    })
-    for (let i = 0; i < journeyList.length; i++) {
-      expect(journeyList[i]).toEqual(correctList[i])
-    }
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 
   test('Can order and filter journeys when both order and where criteria are given', async () => {
@@ -211,15 +176,9 @@ describe('List journeys', () => {
           }
         }
       })
-      const resData = res.body.data
-      const correctList = defaultList.filter(j => j.departureStationId === 501).sort((a, b) => b.distance > a.distance)
-      const journeyList = resData.journeyList.map(j => {
-        delete j['id']
-        return j
-      })
-      for (let i = 0; i < journeyList.length; i++) {
-        expect(journeyList[i]).toEqual(correctList[i])
-      }
+    const resData = res.body.data
+    const correctList = defaultList.filter(j => j.departureStationId === 501).sort((a, b) => b.distance > a.distance)
+    testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
 })
 
