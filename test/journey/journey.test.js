@@ -222,3 +222,19 @@ describe('List journeys', () => {
       }
   })
 })
+
+describe('Getting journey overview', () => {
+  beforeEach(async () => {
+    await uploadJourneys(
+      path.join(__dirname, '..', 'test_data', 'journey', 'journey_sample_normal2.csv')
+    )
+  })
+
+  test('Can get min and max duration and distance of all journeys', async () => {
+    res = await server.get('/api/journey/overview')
+    expect(res.body.errno).toBe(0)
+    const resData = res.body.data
+    const correctData = { maxDuration: 102, minDuration: 5, maxDistance: 19, minDistance: 0 }
+    expect(resData).toEqual(correctData)
+  })
+})
