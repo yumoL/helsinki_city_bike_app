@@ -4,7 +4,7 @@ require('./model/index')
 seq.authenticate().then(() => {
   console.log('auth ok')
 }).catch(() => {
-  console.log('auth err')
+  console.error('auth err')
 })
 
 seq.sync({ force: true }).then(() => {

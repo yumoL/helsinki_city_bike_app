@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS `city_bike_db`;
+CREATE DATABASE IF NOT EXISTS `city_bike_test_db`;

@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon --inspect=9229 bin/www",
-    "prd": "cross-env NODE_ENV=production pm2 start bin/www",
+    "prd": "pm2-runtime start pm2.conf.json",
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit --colors",
     "lint": "eslint --ext .js ./src",
     "init_db": "node src/db/sync.js",
+    "init_db_prd": "cross-env NODE_ENV=production node src/db/sync.js",
     "init_test_db": "cross-env NODE_ENV=test node src/db/sync.js"
   },
   "dependencies": {
