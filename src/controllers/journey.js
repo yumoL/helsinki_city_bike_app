@@ -16,6 +16,7 @@ async function dumpJourneyData(filePath) {
     await fse.remove(filePath)
     return new SuccessModel()
   } catch (e) {
+    console.error(e.message, e.stack)
     return new ErrorModel(uploadFileFailInfo)
   }
 }
@@ -38,7 +39,7 @@ async function listJourneys({ pageIndex = 0, pageSize, order, where }) {
     res.journeyList = journeyList
     return new SuccessModel(res)
   } catch (e) {
-    console.error(e)
+    console.error(e.message, e.stack)
     return new ErrorModel(listJourneysFailInfo)
   }
 }
@@ -56,7 +57,7 @@ async function getJourneyOverviewMinMax() {
     res.maxDistance = Math.ceil(maxDistance / 1000)
     return new SuccessModel(res)
   } catch (e) {
-    console.error(e)
+    console.error(e.message, e.stack)
     return new ErrorModel()
   }
 }

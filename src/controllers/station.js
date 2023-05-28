@@ -18,6 +18,7 @@ async function dumpStationData(filePath) {
   try {
     await dumpStationFromCsv(filePath)
   } catch (e) {
+    console.error(e.message, e.stack)
     return new ErrorModel(uploadFileFailInfo)
   }
   // remove the file after dumping it to db
@@ -36,7 +37,7 @@ async function listStations({ keyword, pageIndex }) {
     const data = await getStationList({ keyword, pageIndex })
     return new SuccessModel(data)
   } catch (e) {
-    console.error(e)
+    console.error(e.message, e.stack)
     return new ErrorModel(listStationsFailInfo)
   }
 }
@@ -81,6 +82,7 @@ async function getStation(sid, monthIndex = -1) {
   try {
     station = await getStationBySid(sid, monthIndex)
   } catch (e) {
+    console.error(e.message, e.stack)
     return new ErrorModel(getSingleStationFailInfo)
   }
   
