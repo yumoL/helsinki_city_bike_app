@@ -164,9 +164,25 @@ async function getJourneyList({ pageIndex = 0, pageSize = PAGE_SIZE, order, wher
   }
 }
 
+/**
+ * Get min and max values of journey duration and distance columns
+ */
+async function getJourneyOverview() {
+  const result = await Journey.findOne({
+    attributes: [
+      [Sequelize.fn('max', Sequelize.col('duration')), 'maxDuration'],
+      [Sequelize.fn('min', Sequelize.col('duration')), 'minDuration'],
+      [Sequelize.fn('max', Sequelize.col('distance')), 'maxDistance'],
+      [Sequelize.fn('min', Sequelize.col('distance')), 'minDistance'],
+    ],
+  })
+  return result.dataValues
+}
+
 
 module.exports = {
   dumpJourneyFromCsv,
-  getJourneyList
+  getJourneyList,
+  getJourneyOverview
 }
 

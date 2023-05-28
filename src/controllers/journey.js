@@ -1,4 +1,7 @@
-const { dumpJourneyFromCsv, getJourneyList } = require('../services/journey')
+const { dumpJourneyFromCsv,
+  getJourneyList,
+  getJourneyOverview }
+  = require('../services/journey')
 const { ErrorModel, SuccessModel } = require('../resModel/ResModel')
 const fse = require('fs-extra')
 const { uploadFileFailInfo, listJourneysFailInfo } = require('../resModel/ErrorInfo')
@@ -40,7 +43,26 @@ async function listJourneys({ pageIndex = 0, pageSize, order, where }) {
   }
 }
 
+/**
+ * Get min and max values of journey duration and distance columns
+ */
+async function getJourneyOverviewMinMax() {
+  try {
+    const res = await getJourneyOverview()
+    let { minDuration, maxDuration, minDistance, maxDistance } = res
+    res.minDuration = Math.floor(minDuration / 60)
+    res.maxDuration = Math.ceil(maxDuration / 60)
+    res.minDistance = Math.floor(minDistance / 1000)
+    res.maxDistance = Math.ceil(maxDistance / 1000)
+    return new SuccessModel(res)
+  } catch (e) {
+    console.error(e)
+    return new ErrorModel()
+  }
+}
+
 module.exports = {
   dumpJourneyData,
-  listJourneys
+  listJourneys,
+  getJourneyOverviewMinMax
 }

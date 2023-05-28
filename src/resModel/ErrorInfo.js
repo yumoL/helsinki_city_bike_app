@@ -18,5 +18,9 @@ module.exports = {
   listJourneysFailInfo: {
     errno: 10004,
     message: 'Failed to list journeys'
+  },
+  getJourneyInfoFailInfo: {
+    errno: 10005,
+    message: 'Failed to get info of journey data'
   }
 }

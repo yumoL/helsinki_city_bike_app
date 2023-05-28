@@ -1,5 +1,5 @@
 const router = require('koa-router')()
-const { dumpJourneyData, listJourneys } = require('../controllers/journey')
+const { dumpJourneyData, listJourneys, getJourneyOverviewMinMax } = require('../controllers/journey')
 const koaForm = require('../middlewares/koaForm')
 
 
@@ -15,6 +15,10 @@ router.post('/all/:pageIndex', async (ctx, next) => {
   let { order, where } = ctx.request.body
   pageIndex = parseInt(pageIndex)
   ctx.body = await listJourneys({ pageIndex, order, where })
+})
+
+router.get('/overview', async(ctx, next) => {
+  ctx.body = await getJourneyOverviewMinMax()
 })
 
 
