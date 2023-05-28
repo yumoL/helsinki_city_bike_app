@@ -16,15 +16,19 @@ services:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
   server:
-    image: hsl-city-bike-backend
+    image: docker.io/yumol/hsl-city-bike-backend:v1
     container_name: hsl-city-bike-backend
     depends_on: 
       - mysql
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     volumes: 
       - ./logs:/usr/src/app/logs
+  
+  app:
+    image: docker.io/yumol/hsl-city-bike-frontend:v1
+    container_name: hsl-city-bike-frontend
+    ports:
+      - "3000:3000"
+    
   
