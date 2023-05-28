@@ -3,7 +3,7 @@ const path = require('path')
 const fse = require('fs-extra')
 const { MAX_FILE_SIZE } = require('../config/constant')
 
-const UPLOADED_DIR = path.join(__dirname, '..', 'uploadedFiles')
+const UPLOADED_DIR = path.join(__dirname, '..', '..', 'uploadedFiles')
 
 // Create the uploaded dir if not existing
 fse.pathExists(UPLOADED_DIR).then(exist => {
