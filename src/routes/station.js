@@ -10,29 +10,31 @@ router.prefix('/api/station')
 
 router.post('/upload', koaForm(), async (ctx, next) => {
   const fileData = ctx.req.files['file']
-  ctx.body = await dumpStationData(fileData.filepath)
+  const res = await dumpStationData(fileData.filepath)
+  if (res.errno) {
+    ctx.status = 500
+  }
+  ctx.body = res
 })
 
 router.get('/all/:pageIndex', async (ctx, next) => {
   let { pageIndex } = ctx.params
   const { keyword } = ctx.query
-  if (pageIndex !== 'all') {
-    pageIndex = parseInt(pageIndex)
-  } else {
-    pageIndex = null
+  const res = await listStations({ keyword, pageIndex })
+  if (res.errno) {
+    ctx.status = 404
   }
-  ctx.body = await listStations({ keyword, pageIndex })
+  ctx.body = res
 })
 
 router.get('/single/:sid', async (ctx, next) => {
   let { sid } = ctx.params
-  sid = parseInt(sid)
   let { month } = ctx.query
-  let monthIndex = -1
-  if (month) {
-    monthIndex = parseInt(month) - 1
+  const res = await getStation(sid, month)
+  if (res.errno) {
+    ctx.status = 404
   }
-  ctx.body = await getStation(sid, monthIndex)
+  ctx.body = res
 })
 
 

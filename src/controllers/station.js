@@ -7,7 +7,8 @@ const { ErrorModel, SuccessModel } = require('../resModel/ResModel')
 const fse = require('fs-extra')
 const { uploadFileFailInfo,
   listStationsFailInfo,
-  getSingleStationFailInfo
+  getSingleStationFailInfo,
+  parseIntegerFailInfo
 } = require('../resModel/ErrorInfo')
 
 /**
@@ -29,10 +30,20 @@ async function dumpStationData(filePath) {
 /**
  * Get a station list
  * @param {string} keyword keyword used in like search by name
- * @param {number} pageIndex 
+ * @param {string} pageIndex 
  * @param {number} pageSize 
  */
 async function listStations({ keyword, pageIndex }) {
+  if (pageIndex === 'all') {
+    pageIndex = null
+  } else {
+    try {
+      pageIndex = parseInt(pageIndex)
+    } catch (e) {
+      console.error(e.message, e.stack)
+      return new ErrorModel(parseIntegerFailInfo)
+    }
+  }
   try {
     const data = await getStationList({ keyword, pageIndex })
     return new SuccessModel(data)
@@ -74,10 +85,22 @@ function _sortObjByVal(obj) {
 
 /**
  * Get a station by sid
- * @param {integer} sid 
- * @param {integer} monthIndex
+ * @param {string} sid 
+ * @param {string|undefined} month
  */
-async function getStation(sid, monthIndex = -1) {
+async function getStation(sid, month) {
+  let monthIndex
+  try {
+    sid = parseInt(sid)
+    monthIndex = parseInt(month) - 1
+  } catch (e) {
+    console.error(e.message, e.stack)
+    return new ErrorModel(parseIntegerFailInfo)
+  }
+  if (!monthIndex) {
+    monthIndex = -1
+  }
+
   let station
   try {
     station = await getStationBySid(sid, monthIndex)
@@ -85,7 +108,7 @@ async function getStation(sid, monthIndex = -1) {
     console.error(e.message, e.stack)
     return new ErrorModel(getSingleStationFailInfo)
   }
-  
+
   //Total number of journeys starting from the station
   const departureCount = station.departures.length
 

@@ -7,13 +7,17 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const cors = require('@koa/cors')
 
-const index = require('./routes/index')
-const station = require('./routes/station')
-const journey = require('./routes/journey')
+const stationRouter = require('./routes/station')
+const journeyRouter = require('./routes/journey')
+const errorRouter = require('./routes/error')
+
 const { MAX_FILE_SIZE } = require('./config/constant')
 
 // error handler
-onerror(app)
+const onErrorConf = {
+  redirect: '/error'
+}
+onerror(app, onErrorConf)
 
 // middlewares
 app.use(cors())
@@ -38,9 +42,9 @@ app.use(async (ctx, next) => {
 })
 
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(station.routes(), station.allowedMethods())
-app.use(journey.routes(), journey.allowedMethods())
+app.use(stationRouter.routes(), stationRouter.allowedMethods())
+app.use(journeyRouter.routes(), journeyRouter.allowedMethods())
+app.use(errorRouter.routes(), errorRouter.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

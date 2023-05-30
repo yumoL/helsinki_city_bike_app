@@ -4,7 +4,10 @@ const { dumpJourneyFromCsv,
   = require('../services/journey')
 const { ErrorModel, SuccessModel } = require('../resModel/ResModel')
 const fse = require('fs-extra')
-const { uploadFileFailInfo, listJourneysFailInfo } = require('../resModel/ErrorInfo')
+const { uploadFileFailInfo,
+  listJourneysFailInfo,
+  parseIntegerFailInfo
+} = require('../resModel/ErrorInfo')
 
 /**
  * Dump journey data to db
@@ -23,12 +26,18 @@ async function dumpJourneyData(filePath) {
 
 /**
  * Get a journey list
- * @param {integer} pageIndex
+ * @param {string} pageIndex
  * @param {integer} pageSize
  * @param {Object} order order criteria 
  * @param {Object} where where criteria
  */
 async function listJourneys({ pageIndex = 0, pageSize, order, where }) {
+  try {
+    pageIndex = parseInt(pageIndex)
+  } catch (e) {
+    console.error(e.message, e.stack)
+    return new ErrorModel(parseIntegerFailInfo)
+  }
   try {
     let res = await getJourneyList({ pageIndex, pageSize, order, where })
     let journeyList = res.journeyList.map(j => {

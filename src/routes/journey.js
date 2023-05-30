@@ -7,18 +7,29 @@ router.prefix('/api/journey')
 
 router.post('/upload', koaForm(), async (ctx, next) => {
   const fileData = ctx.req.files['file']
-  ctx.body = await dumpJourneyData(fileData.filepath)
+  const res = await dumpJourneyData(fileData.filepath)
+  if (res.errno) {
+    ctx.status = 500
+  }
+  ctx.body = res
 })
 
 router.post('/all/:pageIndex', async (ctx, next) => {
   let { pageIndex } = ctx.params
   let { order, where } = ctx.request.body
-  pageIndex = parseInt(pageIndex)
-  ctx.body = await listJourneys({ pageIndex, order, where })
+  const res = await listJourneys({ pageIndex, order, where })
+  if (res.errno) {
+    ctx.status = 404
+  }
+  ctx.body = res
 })
 
-router.get('/overview', async(ctx, next) => {
-  ctx.body = await getJourneyOverviewMinMax()
+router.get('/overview', async (ctx, next) => {
+  const res = await getJourneyOverviewMinMax()
+  if (res.errno) {
+    ctx.status = 500
+  }
+  ctx.body = res
 })
 
 

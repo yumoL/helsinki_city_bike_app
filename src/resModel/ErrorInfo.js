@@ -22,5 +22,9 @@ module.exports = {
   getJourneyInfoFailInfo: {
     errno: 10005,
     message: 'Failed to get info of journey data'
+  },
+  parseIntegerFailInfo: {
+    errno: 10006,
+    message: 'Failed to parse a variable to integer'
   }
 }
