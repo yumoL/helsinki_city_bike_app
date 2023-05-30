@@ -3,6 +3,5 @@ mysql_data
 mysql_data_prd
 app_data
 docs/notes.md
-src/utils/dumpData.js
 uploadedFiles
 logs

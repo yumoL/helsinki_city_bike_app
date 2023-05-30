@@ -8,6 +8,7 @@
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit --colors",
     "lint": "eslint --ext .js ./src",
     "init_db": "node src/db/sync.js",
+    "init_data": "node src/utils/dumpData.js",
     "init_db_prd": "cross-env NODE_ENV=production node src/db/sync.js",
     "init_test_db": "cross-env NODE_ENV=test node src/db/sync.js"
   },
