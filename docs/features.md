@@ -13,6 +13,6 @@
 
 
 ### 4. Listing journeys with pagination, sorting and filtering journeys by distance, duration, departure and arrival station
-[![](./images/journey_list.png)](./images/journey_list.mp4)
+[![](./images/journey_list.png)](https://youtu.be/taNa7TWK1JE)
 Click to play the demo video
 
