@@ -180,6 +180,12 @@ describe('List journeys', () => {
     const correctList = defaultList.filter(j => j.departureStationId === 501).sort((a, b) => b.distance > a.distance)
     testAgainstCorrectJourneyList(resData.journeyList, correctList)
   })
+
+  test('Return 404 when page index is not an integer', async () => {
+    const res = await server
+      .post('/api/journey/all/randomString')
+    expect(res.status).toBe(404)
+  })
 })
 
 describe('Getting journey overview', () => {

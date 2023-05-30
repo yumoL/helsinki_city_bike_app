@@ -41,6 +41,13 @@ describe('Listing stations', () => {
     expect(res.body.data.stationList.length).toBe(3)
   })
 
+  test('Return 404 when page number is not an integer', async () => {
+    const res = await server
+      .get('/api/station/all/randomString')
+      .query({ keyword: '' })
+    expect(res.status).toBe(404)
+  })
+
   test('Can list stations based on station name keyword', async () => {
     const res = await server
       .get('/api/station/all/0')
@@ -140,5 +147,16 @@ describe('Fetch a single station', () => {
       ]
     }
     expect(resData).toEqual(correctData)
+  })
+
+  test('Return 404 when sid or month is not integer', async () => {
+    const res = await server
+      .get('/api/station/single/randomString')
+      .query({ month: 5 })
+    const res2 = await server
+      .get('/api/station/single/501')
+      .query({ month: 'randomString' })
+    expect(res.status).toBe(404)
+
   })
 })
