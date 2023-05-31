@@ -1,10 +1,15 @@
 # Helsinki City Bike App
-This project implements an application for displaying HSL city bike stations and journeys in the Helsinki capital area. 
+This project implements an application for displaying HSL city bike stations and journeys in the Helsinki capital area. The **implemented features** are documented and demonstrated [here](./docs/features.md).
 
 ## Get started 
 The project consists of two parts: 
-* a backend service: this repo, implemented using [Koa2](https://koajs.com/)
-* UI: in [another repo](https://github.com/yumoL/helsinki_city_bike_app_frontend): implemented using [React](https://react.dev/)
+* a backend service: this repo (implemented using [Koa2](https://koajs.com/))
+* UI: in [another repo](https://github.com/yumoL/helsinki_city_bike_app_frontend) (implemented using [React](https://react.dev/))
+
+**Prerequisites**: 
+- Recommended OS: Ubuntu 20 (where the app was tested)
+- [Docker](https://docs.docker.com/get-docker/): recommended version v24
+- [Docker compose](https://docs.docker.com/compose/): recommended version v2.18
 
 ### For users
 Start the App by running
@@ -20,11 +25,17 @@ Clean up
 docker compose down
 ```
 ### For developers
+**Prerequisites**
+* [Node.js](https://nodejs.org/en): recommended version v18
+
+**Development**
 1. Start a MySql server
 ```bash
 # under this repo root
 docker compose -f docker-compose.dev.yaml
 ```
+**Note**: The username and password are already configured (username: root and password: password). You could also install [MySQL Workbench ](https://www.mysql.com/products/workbench/) for better visualization of the database. The MySQL server is exposed on http://localhost:3306 so you can use MySQL Workbench to connect to the MySQL server. 
+
 2. Initialize the schemas in the databases:
 ```bash
 # development database
@@ -62,8 +73,7 @@ docker push docker.io/<your-dockerhub-username>/hsl-city-bike-frontend:v1
 ```
 **Note**: Remember to also change the backend and UI docker image names in docker-compose.yaml. 
 
-## More info
-* The **implemented features** are documented and demonstrated [here](./docs/features.md).
+## App design
 * The database schemas are shown below:
 ![](./docs/images/schemas.png)
 
