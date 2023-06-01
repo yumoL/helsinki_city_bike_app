@@ -53,12 +53,18 @@ docker compose down
 #### 1. Start a MySql server
 ```bash
 # under this repo root
+# grant full permissions to the script that init DB tables
+chmod -R 777 docker
+
+# start the MySQL DB server
 docker compose -f docker-compose.dev.yaml
 ```
 **Note**: The username and password are already configured (username: root and password: password). You could also install [MySQL Workbench ](https://www.mysql.com/products/workbench/) for better visualization of the database. The MySQL server is exposed on http://localhost:3306 so you can use MySQL Workbench to connect to the MySQL server. 
 
 #### 2. Initialize the schemas in the databases:
 ```bash
+# install needed packages
+npm install #only needed for the first time
 # development database
 npm run init_db
 
@@ -68,7 +74,6 @@ npm run init_test_db
 #### 3. Start the backend
 ```bash
 # under this repo root
-npm install #only needed for the first time
 npm run dev
 ```
 #### 4. Start the UI
