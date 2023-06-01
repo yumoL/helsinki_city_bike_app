@@ -12,7 +12,7 @@ services:
       - "3306:3306"
     container_name: mysql
     volumes:
-      - ./mysql_data_prd:/var/lib/mysql
+      #- ./mysql_data_prd:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
   server:
