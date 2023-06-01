@@ -15,6 +15,9 @@ The project consists of two parts:
 #### 1. Start the App by running
 ```bash
 # under this repo root
+# grant full permissions to the script that init DB tables
+chmod -R 777
+# start the App
 docker compose up
 ```
 The UI runs at http://localhost:3000 and backend service http://localhost:3001. 
@@ -29,6 +32,9 @@ For using command line:
 # under this repo root
 # extract csv files
 tar -xvzf app_data.tar.gz -C .
+
+#install needed packages
+npm install
 
 # upload data, the following command will upload the station CSV file and the journey CSV files of May and June
 npm run init_data
