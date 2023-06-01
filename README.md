@@ -16,7 +16,7 @@ The project consists of two parts:
 ```bash
 # under this repo root
 # grant full permissions to the script that init DB tables
-chmod -R 777
+chmod -R 777 docker
 # start the App
 docker compose up
 ```
