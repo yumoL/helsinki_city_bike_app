@@ -10,6 +10,7 @@ The project consists of two parts:
 - Recommended OS: Ubuntu 20 (where the app was tested)
 - [Docker](https://docs.docker.com/get-docker/): recommended version v24
 - [Docker compose](https://docs.docker.com/compose/): recommended version v2.18
+- [Node.js](https://nodejs.org/en): recommended version v18
 
 ### For users
 #### 1. Start the App by running
@@ -46,9 +47,6 @@ npm run init_data
 docker compose down
 ```
 ### For developers
-**Prerequisites**
-* [Node.js](https://nodejs.org/en): recommended version v18
-
 **Development**
 #### 1. Start a MySql server
 ```bash
