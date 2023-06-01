@@ -79,11 +79,11 @@ npm run test
 #### 6. Building docker images
 ```bash
 # backend, under this repo root
-docker build -t docker push docker.io/<your-dockerhub-username>/hsl-city-bike-backend:v1 .
+docker build -t docker.io/<your-dockerhub-username>/hsl-city-bike-backend:v1 .
 docker push docker.io/<your-dockerhub-username>/hsl-city-bike-backend:v1
 
 # frontend, under the UI repo root
-docker build -t docker push docker.io/<your-dockerhub-username>/hsl-city-bike-frontend:v1 .
+docker build -t docker.io/<your-dockerhub-username>/hsl-city-bike-frontend:v1 .
 docker push docker.io/<your-dockerhub-username>/hsl-city-bike-frontend:v1
 ```
 **Note**: Remember to also change the backend and UI docker image names in docker-compose.yaml. 
