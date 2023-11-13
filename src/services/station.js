@@ -138,7 +138,7 @@ async function getStationBySid(sid, monthIndex = -1) {
         where: journeyOpt,
         attributes: ['id', 'departureTime', 'returnStationId', 'distance', 'duration'],
         as: 'departures',
-        //to spped up the query, set separate to true to run a separate query to fetch the associated instances, 
+        //to speed up the query, set separate to true to run a separate query to fetch the associated instances, 
         //note: only supported for hasMany associations
         separate: true,
         include: [
